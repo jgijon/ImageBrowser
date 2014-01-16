@@ -1,7 +1,13 @@
+package model;
 
-public class ProxyImage extends Image {
+
+import java.awt.image.BufferedImage;
+import persistence.ImageLoader;
+
+
+public class ProxyImage implements Image {
     
-    private final ImageLoader loader;
+    private ImageLoader loader;
     private Image next;
     private Image prev;
     private Image realImage;
@@ -12,7 +18,7 @@ public class ProxyImage extends Image {
 
     @Override
     public Dimension getDimension() {
-        //checkLoaded();
+        checkLoaded();
         return realImage.getDimension();
     }
 
@@ -36,9 +42,15 @@ public class ProxyImage extends Image {
         this.prev = image;
     }
 
-    //private void checkLoaded() {
-    //    if (realImage != null) return;
-    //    realImage = loader.load();
-    //}
+    private void checkLoaded() {
+        if (realImage != null) return;
+        realImage = new RealImage(loader.load());
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        checkLoaded();
+        return realImage.getImage();
+    }
 
 }

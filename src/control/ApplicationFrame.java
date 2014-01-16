@@ -1,7 +1,9 @@
+package control;
 
+
+import ui.ImagePanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -11,21 +13,24 @@ import javax.swing.JPanel;
 
 public class ApplicationFrame extends JFrame {
     
+    private ActionListenerFactory factory;
+    
     private static final String PATH = "C:\\Users\\Public\\Pictures\\Sample Pictures";
-    private String[] images = {"desert.jpg", "jellyfish.jpg", "koala.jpg", "penguin.jpg"};
+    //private String[] images = {"desert.jpg", "jellyfish.jpg", "koala.jpg", "penguin.jpg"};
     //private ActionListener[] listeners;
     private int imageIndex = -1;
     private ImagePanel imagePanel;
 
-    public ApplicationFrame() {
+    public ApplicationFrame(ActionListenerFactory factory) {
         super("Image Browser");
         //this.listeners = listeners;
         this.setSize(1024, 800);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.factory = factory;
         //this.setSize(300, 300);
         //this.setLayout(new FlowLayout());
         this.createComponents();
-        drawNextImage();
+        //drawNextImage();
         this.setVisible(true);
     }
 
@@ -35,6 +40,12 @@ public class ApplicationFrame extends JFrame {
         //this.add(createButton("Prev"));
         //this.add(createButton("Next"));
     }
+    
+    private JPanel createImagePanel() {
+        imagePanel = new ImagePanel();
+        return imagePanel;
+    }
+    
     private Component createToolbar() {
         JPanel panel = new JPanel();
         panel.add(createPrevButton());
@@ -43,25 +54,13 @@ public class ApplicationFrame extends JFrame {
     }
     private JButton createNextButton() {
         JButton button = new JButton("Next");
-        button.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                drawNextImage();
-            }
-        });
+        button.addActionListener(factory.createActionListener("next"));
         return button;
     }
 
     private JButton createPrevButton() {
         JButton button = new JButton("Prev");
-        button.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                drawPrevImage();
-            }
-        });
+        button.addActionListener(factory.createActionListener("prev"));
         return button;
     }
 
@@ -71,7 +70,7 @@ public class ApplicationFrame extends JFrame {
         return button;
     }*/
 
-    private void drawNextImage() {
+    /*private void drawNextImage() {
         imageIndex = (imageIndex + 1) % images.length;
         setCurrentImage(imageIndex);
     }
@@ -82,13 +81,14 @@ public class ApplicationFrame extends JFrame {
     }
     
     private void setCurrentImage(int index) {
-        imagePanel.setImage(ImageLoader.load(PATH + "/" + images[index]));
-    }
+        imagePanel.setImage();
+        //new FileImageLoader(PATH + "/" + images[index]).load()
+    }*/
 
-    private JPanel createImagePanel() {
-        imagePanel = new ImagePanel();
+    public ImagePanel getImagePanel() {
         return imagePanel;
     }
+
 
 
     
