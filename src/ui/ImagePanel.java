@@ -1,14 +1,12 @@
 package ui;
 
 
+import model.SwingDimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import model.Image;
 
@@ -16,21 +14,13 @@ import model.Image;
 public class ImagePanel extends JPanel implements ImageViewer{
     
     private Image image;
+    
     private int initalX;
     private int offset;
-    //private BufferedImage nextImage;
-    //private BufferedImage prevImage;
     
     public ImagePanel(){
-        super();
         this.offset = 0;
         this.hookEvents();
-        /*try {
-            this.nextImage = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\jellyfish.jpg"));
-            this.prevImage = ImageIO.read(new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\koala.jpg"));
-        } 
-        catch (IOException ex) {
-        }*/
     }
     
     @Override
@@ -53,11 +43,17 @@ public class ImagePanel extends JPanel implements ImageViewer{
         graphics.drawImage(image.getImage(), offset, 0, null);
         if(offset == 0)
             return;
-        if(offset < 0)
-            graphics.drawImage(image.getNext().getImage(), image.getDimension().getWidth() + offset, 0, null);
+        if(offset > 0)
+            graphics.drawImage(getBufferedImage(image.getNext()), image.getDimension().getWidth() + offset, 0, null);
         else
-            graphics.drawImage(image.getPrev().getImage(), offset - image.getDimension().getWidth(), 0, null);
+            graphics.drawImage(getBufferedImage(image.getPrev()), offset - image.getDimension().getWidth(), 0, null);
     }
+    
+    private BufferedImage getBufferedImage(Image image){
+        SwingDimension dimension = (SwingDimension) image.getDimension();
+        return dimension.getBufferedImage();
+    }
+
 
     private void hookEvents() {
         this.hookMouseListener();
